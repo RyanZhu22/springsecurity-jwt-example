@@ -20,12 +20,14 @@ public class SecurityConfig {
 
     private final UserRepository repository;
 
+    // retrieves a user by email
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> repository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+            .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
+    // uses the user details service and a password encoder to authenticate users.
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -34,11 +36,13 @@ public class SecurityConfig {
         return authProvider;
     }
 
+    // used to authenticate users in the application.
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
 
+    // used to encode user passwords before storing them in the database.
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

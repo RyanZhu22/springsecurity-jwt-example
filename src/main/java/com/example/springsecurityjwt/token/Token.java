@@ -2,6 +2,7 @@ package com.example.springsecurityjwt.token;
 
 
 import com.example.springsecurityjwt.entity.User;
+import com.example.springsecurityjwt.enums.TokenType;
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;

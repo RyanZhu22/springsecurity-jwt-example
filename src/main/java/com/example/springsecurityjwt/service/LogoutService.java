@@ -1,8 +1,7 @@
-package com.example.springsecurityjwt.config;
+package com.example.springsecurityjwt.service;
 
 
-
-import com.example.springsecurityjwt.token.TokenRepository;
+import com.example.springsecurityjwt.repository.TokenRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,18 +18,18 @@ public class LogoutService implements LogoutHandler {
 
     @Override
     public void logout(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            Authentication authentication
+        HttpServletRequest request,
+        HttpServletResponse response,
+        Authentication authentication
     ) {
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
-        if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return;
         }
         jwt = authHeader.substring(7);
         var storedToken = tokenRepository.findByToken(jwt)
-                .orElse(null);
+            .orElse(null);
         if (storedToken != null) {
             storedToken.setExpired(true);
             storedToken.setRevoked(true);
