@@ -41,7 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // Get the JWT token from the request header
         final String authHeader = request.getHeader("Authorization");
         final String jwt;
-        final String userEmail;
+        final String username;
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             // If the Authorization header is missing or doesn't start with "Bearer ",
             // skip the authentication and let the request continue
@@ -51,10 +51,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // Extract the JWT token from the Authorization header
         jwt = authHeader.substring(7);
         // Extract the user email from the JWT token
-        userEmail = jwtService.extractUsername(jwt);
-        if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        username = jwtService.extractUsername(jwt);
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             // If the user email is present in the JWT token and the user is not already authenticated
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
+            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
             // Check if the token is valid and not revoked or expired
             var isTokenValid = tokenRepository.findByToken(jwt)
                 .map(t -> !t.isExpired() && !t.isRevoked())

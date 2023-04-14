@@ -3,6 +3,7 @@ package com.example.springsecurityjwt.entity;
 
 import com.example.springsecurityjwt.enums.Role;
 import com.example.springsecurityjwt.token.Token;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -33,15 +34,15 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue
     private Integer id;
-    private String firstname;
-    private String lastname;
     private String email;
     private String password;
+    private String username;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private List<Token> tokens;
 
     @Override
@@ -56,7 +57,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return username;
     }
 
     @Override
@@ -78,5 +79,6 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }
 

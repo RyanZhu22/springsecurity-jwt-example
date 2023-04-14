@@ -1,5 +1,6 @@
 package com.example.springsecurityjwt.service;
 
+
 import com.example.springsecurityjwt.dto.AuthenticationRequest;
 import com.example.springsecurityjwt.dto.AuthenticationResponse;
 import com.example.springsecurityjwt.dto.RegisterRequest;
@@ -26,8 +27,7 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest request) {
         var user = User.builder()
-            .firstname(request.getFirstname())
-            .lastname(request.getLastname())
+            .username(request.getUsername())
             .email(request.getEmail())
             .password(passwordEncoder.encode(request.getPassword()))
             .role(Role.USER)
@@ -43,11 +43,11 @@ public class AuthenticationService {
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
-                request.getEmail(),
+                request.getUsername(),
                 request.getPassword()
             )
         );
-        var user = repository.findByEmail(request.getEmail())
+        var user = repository.findByUsername(request.getUsername())
             .orElseThrow();
         var jwtToken = jwtService.generateToken(user);
         revokeAllUserTokens(user);
